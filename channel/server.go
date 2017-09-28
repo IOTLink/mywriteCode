@@ -42,12 +42,15 @@ func Serve(queue chan *Request) {
 	}
 	*/
 
-
+	var sem = make(chan int, 1)
 	for req := range queue{
-		fmt.Println("queue is open")
+		//fmt.Println("queue is open")
+		sem<-1
 		go func(r *Request) {
 			process(r)
+			<-sem
 		}(req)
+
 	}
 
 	/*
@@ -58,9 +61,9 @@ func Serve(queue chan *Request) {
 }
 
 func test1() {
-	queue := make(chan *Request,10)
+	queue := make(chan *Request,100)
 
-	for i:=0; i<10; i++{
+	for i:=0; i<100; i++{
 		r := &Request{key:i,value:string("he!")}
 		queue <- r
 		fmt.Println("instert queue",i)
@@ -71,23 +74,6 @@ func test1() {
 
 func main(){
 	test1()
-	//test2()
-	time.Sleep(time.Second*1)
-
+	time.Sleep(time.Second*3)
 }
 
-func test2() {
-	queue := make(chan int,100)
-	for i:=0; i<10; i++{
-		queue <- i
-		fmt.Println("instert queue",i)
-	}
-	close(queue)
-
-	for req := range queue{
-		fmt.Println(req)
-	}
-}
-//http://www.jianshu.com/p/fe5dd2efed5d
-//https://gobyexample.com/range-over-channels
-//go range channel

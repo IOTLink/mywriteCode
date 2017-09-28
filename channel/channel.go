@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	test1()
-	//test2()
+	//test1()
+	test2()
 	//test3()
 	//test4()
 	//test5()
@@ -40,7 +40,11 @@ func test2() {
 			msgPing <- "ping"
 
 			select {
-			case msg := <-msgPong:
+			case msg ,ok := <-msgPong:
+				if !ok {
+					//exitChan <- 1
+					return
+				}
 				fmt.Println(msg)
 			}
 
@@ -51,18 +55,22 @@ func test2() {
 			}
 			time.Sleep(time.Millisecond*500)
 		}
+		close(msgPong)
 		exitChan <- 1
 	}()
 
 	go func() {
+		count := 0
 		fmt.Println("go groutunue 2")
 		for{
-			count := 0
+
 			select {
-			case msg := <-msgPing:
+			case msg,ok := <-msgPing:
+				if !ok {
+					//exitChan <- 2
+					return
+				}
 				fmt.Println(msg)
-			//default:
-			//	fmt.Println("go 2 continue")
 			}
 			msgPong <- "pong"
 			if count > 3 {
@@ -73,12 +81,23 @@ func test2() {
 
 			time.Sleep(time.Millisecond*500)
 		}
-
+		close(msgPing)
 		exitChan <- 2
 	}()
 
 	time.Sleep(time.Second*1)
+	//return
+
+	/*
+	for {
+		select {
+			case exit:= <-exitChan:
+				fmt.Println(exit)
+		}
+	}
 	return
+	*/
+
 	for i:=0; i<2; i++ {
 		exit := <-exitChan
 		fmt.Println(exit)
