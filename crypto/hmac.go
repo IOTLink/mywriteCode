@@ -18,7 +18,21 @@ func main() {
 	mac := hmac.New(sha1.New, key)
 	// mac := hmac.New(md5.New, key)
 	mac.Write([]byte("aaaaaa"))
-	fmt.Printf("%x\n", mac.Sum(nil))
+	hash := mac.Sum(nil)
+	fmt.Printf("%x\n", hash)
+	fmt.Printf("%s\n", string(hash))
+
+
+	//接受者验证
+	ret := hmac.Equal(hash, hash)
+	fmt.Println(ret)
+
+	/*
+	mac.Write(hash)
+	hash = mac.Sum(nil)
+	fmt.Printf("%x\n", hash)
+	*/
+
 }
 
 //http://www.nljb.net/default/Golang%E4%B9%8BHMAC%E7%9A%84SHA1%E5%8A%A0%E5%AF%86/
