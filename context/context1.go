@@ -70,7 +70,6 @@ func test2()  {
 		}
 	}()
 	wg.Wait()
-
 }
 
 func main() {
