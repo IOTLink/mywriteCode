@@ -2,6 +2,40 @@ package test
 
 import "testing"
 
+import (
+	"flag"
+	"log"
+	"os"
+
+	"fmt"
+)
+
+var wordPtr = flag.String("word", "foo", "a string")
+
+func TestMain(m *testing.M) {
+
+
+	flag.Parse()
+	log.Println("[TestMain] word:", *wordPtr)
+
+	log.Println("[TestMain] run()前")
+	exitVal := m.Run()
+	log.Println("[TestMain] run()后")
+
+
+	os.Exit(exitVal)
+
+	fmt.Println("test Main")
+}
+
+
+
+func TestM_main(t *testing.T) {
+	log.Println("[Test1] running ", *wordPtr)
+}
+
+
+
 func Reverse(str string) string {
 	rs := []rune(str)
 	len := len(rs)
