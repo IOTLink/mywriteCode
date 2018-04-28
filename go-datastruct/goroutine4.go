@@ -8,13 +8,7 @@ import (
 	"time"
 )
 
-const (
-	go_size int = 10
-	count int = 10000
-)
-
 func main() {
-
 	msg1:= make(chan string,1)
 	//msg1:= make(chan string)
 	msg2:= make(chan string, 1)
